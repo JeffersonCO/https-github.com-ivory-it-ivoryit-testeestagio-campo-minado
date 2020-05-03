@@ -1,0 +1,436 @@
+using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections;
+using System.Collections.Specialized;
+
+namespace Ivory.TesteEstagio.CampoMinado
+{
+    class Program
+    {
+        static char[,] matrizReplicada(CampoMinado campo)
+        {
+            string vetorSubstituido = campo.Tabuleiro.Replace("\r\n", "");
+            char[,] matrizSubstituida = new char[9, 9];
+
+            // Posição da string de 0 até 81
+            int pos = 0;
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    matrizSubstituida[i, j] = vetorSubstituido[pos++];
+                }
+            }
+            return matrizSubstituida;
+        }
+
+        static void verificarCasa(char[,] matriz, char[,] casaBomba)
+        {
+            int casasFechadas;
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (matriz[i, j] != '-' && matriz[i, j] != '0')
+                    {
+                        // Topo matriz(não verifica diagonais superiores nem a casa acima)
+                        if (i == 0 && j > 0 && j < 8)
+                        {
+                            casasFechadas = 0;
+                            // Abaixo
+                            if (matriz[i + 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Direita
+                            if (matriz[i, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Esquerda
+                            if (matriz[i, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Esquerda
+                            if (matriz[i + 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Direita
+                            if (matriz[i + 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Se o nº de casas fechadas for igual ao número da casa analisada
+                            // então marque as posições
+                            if (casasFechadas == matriz[i, j] - '0')
+                            {
+                                // Abaixo
+                                if (matriz[i + 1, j] == '-')
+                                {
+                                    casaBomba[i + 1, j] = 'X';
+                                }
+                                // Direita
+                                if (matriz[i, j + 1] == '-')
+                                {
+                                    casaBomba[i, j + 1] = 'X';
+                                }
+                                // Esquerda
+                                if (matriz[i, j - 1] == '-')
+                                {
+                                    casaBomba[i, j - 1] = 'X';
+                                }
+                                // Diagonal Inf Esquerda
+                                if (matriz[i + 1, j - 1] == '-')
+                                {
+                                    casaBomba[i + 1, j - 1] = 'X';
+                                }
+                                // Diagonal Inf Direita
+                                if (matriz[i + 1, j + 1] == '-')
+                                {
+                                    casaBomba[i + 1, j + 1] = 'X';
+                                }
+                            }
+                        }
+                        // Parte central da matriz(verifica todos os lados)
+                        else if (i > 0 && i < 8 && j > 0 && j < 8)
+                        {
+                            casasFechadas = 0;
+                            // Abaixo
+                            if (matriz[i + 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Direita
+                            if (matriz[i, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Esquerda
+                            if (matriz[i, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Esquerda
+                            if (matriz[i + 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Direita
+                            if (matriz[i + 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Acima
+                            if (matriz[i - 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Esquerda
+                            if (matriz[i - 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Direita
+                            if (matriz[i - 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Se o nº de casas fechadas for igual ao número da casa analisada
+                            // então marque as posições
+                            if (casasFechadas == matriz[i, j] - '0')
+                            {
+                                // Abaixo
+                                if (matriz[i + 1, j] == '-')
+                                {
+                                    casaBomba[i + 1, j] = 'X';
+                                }
+                                // Direita
+                                if (matriz[i, j + 1] == '-')
+                                {
+                                    casaBomba[i, j + 1] = 'X';
+                                }
+                                // Esquerda
+                                if (matriz[i, j - 1] == '-')
+                                {
+                                    casaBomba[i, j - 1] = 'X';
+                                }
+                                // Diagonal inferior esquerda
+                                if (matriz[i + 1, j - 1] == '-')
+                                {
+                                    casaBomba[i + 1, j - 1] = 'X';
+                                }
+                                // Diagonal Inf Direita
+                                if (matriz[i + 1, j + 1] == '-')
+                                {
+                                    casaBomba[i + 1, j + 1] = 'X';
+                                }
+                                // Acima
+                                if (matriz[i - 1, j] == '-')
+                                {
+                                    casaBomba[i - 1, j] = 'X';
+                                }
+                                // Diagonal Sup Esquerda
+                                if (matriz[i - 1, j - 1] == '-')
+                                {
+                                    casaBomba[i - 1, j - 1] = 'X';
+                                }
+                                // Diagonal Sup Direita
+                                if (matriz[i - 1, j + 1] == '-')
+                                {
+                                    casaBomba[i - 1, j + 1] = 'X';
+                                }
+                            }
+                        }
+                        // Parte direita da matriz (não verifica diagonais direita, nem o lado direito)
+                        else if (i > 0 && i < 8 && j == 8)
+                        {
+                            casasFechadas = 0;
+                            // Abaixo
+                            if (matriz[i + 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Esquerda
+                            if (matriz[i, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Esquerda
+                            if (matriz[i + 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Acima
+                            if (matriz[i - 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Esquerda
+                            if (matriz[i - 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Se o nº de casas fechadas for igual ao número da casa analisada
+                            // então marque as posições
+                            if (casasFechadas == matriz[i, j] - '0')
+                            {
+                                //Abaixo
+                                if (matriz[i + 1, j] == '-')
+                                {
+                                    casaBomba[i + 1, j] = 'X';
+                                }
+                                //  Esquerda
+                                if (matriz[i, j - 1] == '-')
+                                {
+                                    casaBomba[i, j - 1] = 'X';
+                                }
+                                // Diagonal Inf Esquerda
+                                if (matriz[i + 1, j - 1] == '-')
+                                {
+                                    casaBomba[i + 1, j - 1] = 'X';
+                                }
+                                // Acima
+                                if (matriz[i - 1, j] == '-')
+                                {
+                                    casaBomba[i - 1, j] = 'X';
+                                }
+                                // Diagonal Sup Esquerda
+                                if (matriz[i - 1, j - 1] == '-')
+                                {
+                                    casaBomba[i - 1, j - 1] = 'X';
+                                }
+                            }
+                        }
+                        // Canto esquerdo da matriz(não verifica Diagonais esquerdas nem o lado esquerdo)
+                        else if (i > 0 && i < 8 && j == 0)
+                        {
+                            casasFechadas = 0;
+                            // Abaixo
+                            if (matriz[i + 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Direita
+                            if (matriz[i, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Inf Direita
+                            if (matriz[i + 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Acima
+                            if (matriz[i - 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Direita
+                            if (matriz[i - 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Se o nº de casas fechadas for igual ao número da casa analisada
+                            // então marque as posições
+                            if (casasFechadas == matriz[i, j] - '0')
+                            {
+                                // Abaixo
+                                if (matriz[i + 1, j] == '-')
+                                {
+                                    casaBomba[i + 1, j] = 'X';
+                                }
+                                // Direita
+                                if (matriz[i, j + 1] == '-')
+                                {
+                                    casaBomba[i, j + 1] = 'X';
+                                }
+                                // Diagonal Inf Direita
+                                if (matriz[i + 1, j + 1] == '-')
+                                {
+                                    casaBomba[i + 1, j + 1] = 'X';
+                                }
+                                // Acima
+                                if (matriz[i - 1, j] == '-')
+                                {
+                                    casaBomba[i - 1, j] = 'X';
+                                }
+                                // Diagonal Sup Direita
+                                if (matriz[i - 1, j + 1] == '-')
+                                {
+                                    casaBomba[i - 1, j + 1] = 'X';
+                                }
+                            }
+                        }
+                        // Parte de baixo(Não verifica casa abaixo nem as diagonais inferiores)
+                        else if (i == 8 && j > 0 && j < 8)
+                        {
+                            casasFechadas = 0;
+                            // Direita
+                            if (matriz[i, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Esquerda
+                            if (matriz[i, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Acima
+                            if (matriz[i - 1, j] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Esquerda
+                            if (matriz[i - 1, j - 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Diagonal Sup Direita
+                            if (matriz[i - 1, j + 1] == '-')
+                            {
+                                casasFechadas++;
+                            }
+                            // Se o nº de casas fechadas for igual ao número da casa analisada
+                            // então marque as posições
+                            if (casasFechadas == matriz[i, j] - '0')
+                            {
+                                // Direita
+                                if (matriz[i, j + 1] == '-')
+                                {
+                                    casaBomba[i, j + 1] = 'X';
+                                }
+                                // Esquerda
+                                if (matriz[i, j - 1] == '-')
+                                {
+                                    casaBomba[i, j - 1] = 'X';
+                                }
+                                // Acima
+                                if (matriz[i - 1, j] == '-')
+                                {
+                                    casaBomba[i - 1, j] = 'X';
+                                }
+                                // Diagonal Sup Esquerda
+                                if (matriz[i - 1, j - 1] == '-')
+                                {
+                                    casaBomba[i - 1, j - 1] = 'X';
+                                }
+                                // Diagonal Sup Direita
+                                if (matriz[i - 1, j + 1] == '-')
+                                {
+                                    casaBomba[i - 1, j + 1] = 'X';
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        static void abrirCasa(char[,] matriz, char[,] casaBomba, CampoMinado campo)
+        {
+            // Abre as casas que não há bomba, atualiza a matriz com as novas casas e verifica novamente
+            // se na casa analisada o número de casas fechadas é igual ao número mostrado na casa analisada
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if (casaBomba[i, j] != 'X')
+                    {
+                        // +1 pois vai de 1 até 9
+                        campo.Abrir(i + 1, j + 1);
+                        matriz = matrizReplicada(campo);
+                        verificarCasa(matriz, casaBomba);
+                    }
+                }
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            var campoMinado = new CampoMinado();
+            Console.WriteLine("Início do jogo\n=========");
+            Console.WriteLine(campoMinado.Tabuleiro);
+
+            // Realize sua codificação a partir deste ponto, boa sorte!
+
+            // Matriz sem os caracteres \n\r
+            char[,] matriz = matrizReplicada(campoMinado);
+
+            // Matriz com a localização de cada bomba encontrada, inicialmente todas posições são '-'
+            char[,] casaBomba = new char[9, 9];
+
+            Console.WriteLine("\nMapa inicial das posições com bombas: ");
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    casaBomba[i, j] = '-';
+                    Console.Write(casaBomba[i,j]);
+                }
+                Console.WriteLine();
+            }
+
+            abrirCasa(matriz, casaBomba, campoMinado);
+
+            Console.WriteLine("\nMapa das posições com bombas, após análise do tabuleiro: ");
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    Console.Write(casaBomba[i, j]);
+                }
+                Console.WriteLine();
+            }
+
+            Console.WriteLine($"\nTabuleiro resolvido:\n{campoMinado.Tabuleiro}");
+
+            if (campoMinado.JogoStatus == 1)
+            {
+                Console.WriteLine("\nPerfeito! O algoritmo abriu 71 casas. Logo, jogo encerrado.");
+            }
+        }
+    }
+}
